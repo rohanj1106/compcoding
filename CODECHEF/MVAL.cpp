@@ -22,6 +22,7 @@ int main()
         }
         if(ans==0){
             cout<<0<<endl<<0<<endl;
+            
             continue;
         }
         vector<ll> temp;
