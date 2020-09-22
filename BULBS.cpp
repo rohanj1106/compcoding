@@ -44,13 +44,17 @@ int main() {
                 r=i;
             }
         }
+        if(ans==n){
+            cout<<0<<endl;
+            continue;
+        }
         if(str[l]=='0'){
             arr.push_back(make_pair(l,r));
         }
         //cout<<ans<<endl;
         sort(arr.begin(),arr.end(),comp);
         for(i=0;i<arr.size();i++){
-            cout<<arr[i].first<<" "<<arr[i].second<<endl;
+            //cout<<arr[i].first<<" "<<arr[i].second<<endl;
             if(k==0){
                 break;
             }
