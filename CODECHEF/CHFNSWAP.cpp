@@ -13,6 +13,9 @@ ll getHalfSumPoint(ll n){
     double D = sqrt(1.0+(4.0)*(double)(sum));
     return ((D-1)/2);
 }
+ll nc2(ll n){
+    return ((n*(n-1))/2);
+}
 int main()
 {
     ifstream cin("input.txt");
@@ -21,7 +24,17 @@ int main()
     while (t--)
     {
         cin>>n;
+        ll sum = sumOfNaturalNumbers(n);
+        if(sum%2==1){
+            cout<<0<<endl;
+            continue;
+        }
         ll halfSumPoint = getHalfSumPoint(n);
-        cout<<halfSumPoint<<" "<<sumOfNaturalNumbers(halfSumPoint)<<" "<<sumOfNaturalNumbers(n)<<endl;
+        //cout<<halfSumPoint<<" "<<sumOfNaturalNumbers(halfSumPoint)<<" "<<sumOfNaturalNumbers(n)<<endl;
+        if(sum==2*sumOfNaturalNumbers(halfSumPoint)){
+            cout<<nc2(halfSumPoint)+nc2(n-halfSumPoint)+(n-halfSumPoint)<<endl;
+        }else{
+            cout<<(n-halfSumPoint)<<endl;
+        }
     }
 }

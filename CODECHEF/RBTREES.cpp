@@ -1,58 +1,43 @@
 #include <iostream>
 #include <vector>
 #include <fstream>
+#include <string>
 using namespace std;
 #define ll long long int
-void dfs(vector<vector<ll> > &g, ll node, ll par, ll &ocount, ll &ecount, ll lev)
-{
-    ll i;
-    if (lev % 2 == 0)
-    {
-        ecount++;
-    }
-    else
-    {
-        ocount++;
-    }
-    for (i = 0; i < g[node].size(); i++)
-    {
-        if (g[node][i] != par)
-        {
-            dfs(g, g[node][i], node, ocount, ecount, lev + 1);
+
+/*do DFS and check faulty nodes for each type of color distribution red 
+color to even level nodes and black color to odd level nodes and similarly for other case*/
+pair<ll,ll> dfs(vector<vector<ll> >&g,ll node,ll par,ll &result1,ll &result2,ll level,string &colors){
+    ll faultyNodes1=0,faultyNodes2=0;
+    for(ll i=0;i<g[node].size();i++){
+        if(g[node][i]!=par){
+            pair<ll,ll> faultyNodes = dfs(g,g[node][i],node,result1,result2,level+1,colors);
+            faultyNodes1+=faultyNodes.first;
+            faultyNodes2+=faultyNodes.second;
         }
     }
-}
-ll dfs1(vector<vector<ll> > &g, ll node, ll &moves, ll par, ll lev, ll &state, string &colors)
-{
-    ll i, ans = 0;
-    for (i = 0; i < g[node].size(); i++)
-    {
-        if (g[node][i] != par)
-        {
-            ans += dfs1(g, g[node][i], moves, node, lev + 1, state, colors);
+    if(level%2==0){
+        if(colors[node-1]=='0'){
+            faultyNodes2+=-1;
+        }else{
+            faultyNodes1+=1;
+        }
+    }else{
+        if(colors[node-1]=='0'){
+            faultyNodes1+=-1;
+        }else{
+            faultyNodes2+=1;
         }
     }
-    if (state == 0)
-    {
-        if((lev % 2) == 0 && colors[node-1]=='1'){
-            ans++;
-        }else if((lev % 2) == 1 && colors[node-1]=='0'){
-            ans--;
-        }
-    }
-    else
-    {
-        if((lev % 2) == 0 && colors[node-1]=='0'){
-            ans--;
-        }else if((lev % 2) == 1 && colors[node-1]=='1'){
-            ans++;
-        }
-    }
-    moves += abs(ans);
-    return ans;
-}
+    result1+=abs(faultyNodes1);
+    result2+=abs(faultyNodes2);
+    return make_pair(faultyNodes1,faultyNodes2);
+} 
+
 int main()
 {
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
     ifstream cin("input.txt");
     ll t, n, m, i, j, k, l, x, y, c;
     vector<ll> arr;
@@ -68,46 +53,19 @@ int main()
             g[y].push_back(x);
         }
         string colors;
-        cin >> colors;
-        //cout << colors << endl;
-        ll ocount = 0, ecount = 0, onecount = 0, zcount = 0, state, moves = 0, req = 0;
-        for (i = 0; i < colors.length(); i++)
-        {
-            if (colors[i] == '0')
-            {
-                zcount++;
-            }
-            else
-            {
-                onecount++;
-            }
-        }
-        dfs(g, 1, -1, ocount, ecount, 0);
-        ll ans=INT_MAX,flag=1;
-        if (zcount == ecount)
-        {
-            moves=0;
-            state = 0;
-            dfs1(g,1,moves,-1,0,state,colors);
-            ans=min(ans,moves);
-            flag=0;
-        }
-        if(zcount==ocount)
-        {
-            state = 1;
-            moves=0;
-            dfs1(g,1,moves,-1,0,state,colors);
-            ans=min(ans,moves);
-            flag=0;
-        }
-        if(flag)
-        {
+        cin>>colors;
+        ll result1=0,result2=0;
+        pair<ll,ll> temp = dfs(g,1,-1,result1,result2,1,colors);
+        if(temp.first!=0&&temp.second!=0){
             cout<<-1<<endl;
-            continue;
         }
-        //cout << ocount << " " << ecount << endl;
-        dfs1(g,1,moves,-1,0,state,colors);
-        cout<<moves<<endl;
+        else if(temp.first==0&&temp.second==0){
+            cout<<min(result1,result2)<<endl;
+        }else if(temp.first==0){
+            cout<<result1<<endl;
+        }else{
+            cout<<result2<<endl;
+        }
     }
 
     return 0;
