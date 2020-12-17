@@ -10,7 +10,8 @@ int main()
     cin >> t;
     while (t--)
     {
-        cin>>x;
+        cin>>x; 
+        
         cout<<x<<" "<<0<<endl;
     }
 }
