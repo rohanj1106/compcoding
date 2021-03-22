@@ -3,7 +3,6 @@
 #include <fstream>
 using namespace std;
 #define ll long long int
-
 int main()
 {
     ifstream cin("input.txt");
